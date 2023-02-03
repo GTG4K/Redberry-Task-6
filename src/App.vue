@@ -4,10 +4,6 @@
 <script setup></script>
 
 <style scoped lang="scss">
-* {
-  font-family: HelveticaNeue;
-}
-
 @font-face {
   font-family: 'HelveticaNeue';
   src: url('../src/assets/fonts/HelveticaNeue-01.ttf');
