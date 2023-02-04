@@ -1,6 +1,6 @@
 <template>
   <main>
-    <form-container>
+    <form-container title="გამოცდილება" step="2">
       <template v-slot:inputs>
         <div
           class="experience-container"
@@ -8,18 +8,18 @@
           :key="experience.id"
         >
           <base-text
-            title="ელ.ფოსტა"
-            hint="უნდა მთავრდებოდეს @redberry.ge-თი"
-            placeholder="Shoko.Nishimiya@redberry.ge "
+            title="თანამდებობა"
+            hint="მინიმუმ 2 სიმბოლო"
+            placeholder="Full-stack developer"
           ></base-text>
           <base-text
-            title="მობილურის ნომერი"
-            hint="უნდა აკმაყოფილებდეს ქართული მობილურის ნომრის ფორმატს"
-            placeholder="+995 551 12 34 56"
+            title="დამსაქმებელი"
+            hint="მინიმუმ 2 სიმბოლო"
+            placeholder="Redberry"
           ></base-text>
           <div class="duo">
-            <base-date></base-date>
-            <base-date></base-date>
+            <base-date title="დაწყების რიცხვი"></base-date>
+            <base-date title="დამთავრების რიცხვი"></base-date>
           </div>
           <base-textarea
             title="აღწერა"
@@ -73,7 +73,7 @@ function addExperience() {
 const router = useRouter();
 
 function nextForm() {
-  router.push('/info/experience');
+  router.push('/info/education');
 }
 
 function previousForm() {

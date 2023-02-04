@@ -1,13 +1,27 @@
 <template>
   <div class="input-container">
     <h2>{{ props.title }}</h2>
-    <input type="text" :placeholder="props.placeholder" />
+    <input
+      type="text"
+      :value="inputValue"
+      :placeholder="props.placeholder"
+      @input="updateValue"
+    />
     <span>{{ props.hint }}</span>
   </div>
 </template>
 
 <script setup>
-const props = defineProps(['title', 'placeholder', 'hint']);
+import { ref } from 'vue';
+const props = defineProps(['title', 'placeholder', 'hint', 'modelValue']);
+const emit = defineEmits(['update:modelValue']);
+
+const inputValue = ref(props.modelValue);
+
+function updateValue(e) {
+  inputValue.value = e.target.value;
+  emit('update:modelValue', inputValue.value);
+}
 </script>
 
 <style scoped lang="scss">

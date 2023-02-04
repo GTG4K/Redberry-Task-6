@@ -1,12 +1,26 @@
 <template>
   <div class="input-container">
     <h2>{{ props.title }}</h2>
-    <textarea :placeholder="props.placeholder"></textarea>
+    <textarea
+      @input="updateValue"
+      :placeholder="props.placeholder"
+      :value="inputValue"
+    ></textarea>
   </div>
 </template>
 
 <script setup>
-const props = defineProps(['title', 'placeholder']);
+import { ref } from 'vue';
+
+const props = defineProps(['title', 'placeholder', 'modelValue']);
+const emit = defineEmits(['update:modelValue']);
+
+const inputValue = ref(props.modelValue);
+
+function updateValue(e) {
+  inputValue.value = e.target.value;
+  emit('update:modelValue', inputValue.value);
+}
 </script>
 
 <style scoped lang="scss">

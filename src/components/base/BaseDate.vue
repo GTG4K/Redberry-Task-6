@@ -1,11 +1,13 @@
 <template>
   <div class="input-container">
-    <h2>სახელი</h2>
+    <h2>{{ props.title }}</h2>
     <input type="date" />
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+const props = defineProps(['title']);
+</script>
 
 <style scoped lang="scss">
 .input-container {
@@ -18,6 +20,7 @@
     border: 1px solid #bcbcbc;
     border-radius: 4px;
     padding: 14px 7px;
+    cursor: pointer;
   }
   h2 {
     font-weight: 700;
