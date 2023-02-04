@@ -15,7 +15,10 @@
           ></base-text>
         </div>
         <base-file title="პირადი ფოტოს ატვირთვა"></base-file>
-        <base-textarea></base-textarea>
+        <base-textarea
+          title="ჩემ შესახებ (არასავალდებულო)"
+          placeholder="ზოგადი ინფო შენ შესახებ"
+        ></base-textarea>
         <base-text
           title="ელ.ფოსტა"
           hint="უნდა მთავრდებოდეს @redberry.ge-თი"

@@ -27,7 +27,7 @@ function redirectBack() {
 const styling = computed(() => {
   return {
     dark: props.theme === 'dark',
-    input: props.theme === 'input',
+    blue: props.theme === 'blue',
   };
 });
 </script>
@@ -46,6 +46,7 @@ button {
   background: hsla(256, 74%, 57%, 1);
   border-radius: 4px;
   cursor: pointer;
+  width: fit-content;
   &:hover {
     background: hsla(256, 100%, 64%, 1);
   }
@@ -61,10 +62,8 @@ button {
   }
 }
 
-.input {
+.blue {
   background: hsla(202, 86%, 40%, 1);
-  padding: 2px 10px;
-  font-size: 15px;
 
   &:hover {
     background: hsla(202, 86%, 50%, 1);

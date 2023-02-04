@@ -1,13 +1,11 @@
 <template>
   <div class="input-container">
-    <h2>{{ props.title }}</h2>
-    <textarea :placeholder="props.placeholder"></textarea>
+    <h2>სახელი</h2>
+    <input type="date" />
   </div>
 </template>
 
-<script setup>
-const props = defineProps(['title', 'placeholder']);
-</script>
+<script setup></script>
 
 <style scoped lang="scss">
 .input-container {
@@ -15,12 +13,11 @@ const props = defineProps(['title', 'placeholder']);
   gap: 0.4rem;
   flex-direction: column;
 
-  textarea {
-    resize: none;
-    height: 80px;
-    border-radius: 4px;
-    background: white;
+  input {
+    background: #ffffff;
     border: 1px solid #bcbcbc;
+    border-radius: 4px;
+    padding: 14px 7px;
   }
   h2 {
     font-weight: 700;

@@ -38,6 +38,9 @@ const props = defineProps(['title', 'step']);
   display: flex;
   flex-direction: column;
   gap: 2.2rem;
+  height: 650px;
+  overflow-y: auto;
+  padding-right: 5px;
 }
 .form-header {
   display: flex;
@@ -53,6 +56,7 @@ const props = defineProps(['title', 'step']);
 
 .form-action {
   display: flex;
+  justify-content: space-between;
   flex-direction: row-reverse;
 }
 </style>
