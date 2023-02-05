@@ -1,12 +1,22 @@
 <template>
   <div class="input-container">
     <h2>{{ props.title }}</h2>
-    <input type="date" />
+    <input type="date" :value="inputValue" @input="updateValue" />
   </div>
 </template>
 
 <script setup>
-const props = defineProps(['title']);
+import { ref } from 'vue';
+const props = defineProps(['title', 'modelValue']);
+const emit = defineEmits(['update:modelValue', 'dateInput']);
+
+const inputValue = ref(props.modelValue);
+
+function updateValue(e) {
+  inputValue.value = e.target.value;
+  emit('update:modelValue', inputValue.value);
+  emit('dateInput');
+}
 </script>
 
 <style scoped lang="scss">

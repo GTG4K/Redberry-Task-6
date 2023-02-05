@@ -11,19 +11,33 @@
             title="თანამდებობა"
             hint="მინიმუმ 2 სიმბოლო"
             placeholder="Full-stack developer"
+            v-model="experience.position"
+            @textInput="updateExperience"
           ></base-text>
           <base-text
             title="დამსაქმებელი"
             hint="მინიმუმ 2 სიმბოლო"
             placeholder="Redberry"
+            v-model="experience.employer"
+            @textInput="updateExperience"
           ></base-text>
           <div class="duo">
-            <base-date title="დაწყების რიცხვი"></base-date>
-            <base-date title="დამთავრების რიცხვი"></base-date>
+            <base-date
+              title="დაწყების რიცხვი"
+              v-model="experience.startDate"
+              @dateInput="updateExperience"
+            ></base-date>
+            <base-date
+              title="დამთავრების რიცხვი"
+              v-model="experience.endDate"
+              @dateInput="updateExperience"
+            ></base-date>
           </div>
           <base-textarea
             title="აღწერა"
             placeholder="როლი თანამდებობაზე და ზოგადი აღწერა"
+            v-model="experience.description"
+            @textInput="updateExperience"
           ></base-textarea>
           <div class="separator"></div>
         </div>
@@ -36,7 +50,7 @@
         <base-button @click="previousForm">უკან</base-button>
       </template>
     </form-container>
-    <div class="resume"></div>
+    <resume-container :experiences="experiences"></resume-container>
   </main>
 </template>
 
@@ -45,29 +59,40 @@ import FormContainer from '../components/ui/FormContainer.vue';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 
-let CurrentId = 1;
-const experiences = ref([
-  {
-    id: CurrentId,
-    email: null,
-    mNumber: null,
-    startDate: null,
-    endDate: null,
-    description: null,
-  },
-]);
+const sessionExperiences = JSON.parse(sessionStorage.getItem('experiences'));
+const sessionCurrentId = sessionStorage.getItem('currentId');
+
+const currentId = ref(sessionCurrentId || 1);
+const experiences = ref(
+  sessionExperiences || [
+    {
+      id: currentId.value,
+      position: null,
+      employer: null,
+      startDate: null,
+      endDate: null,
+      description: null,
+    },
+  ]
+);
+
+function updateExperience() {
+  sessionStorage.setItem('experiences', JSON.stringify(experiences.value));
+}
 
 function addExperience() {
-  CurrentId++;
+  currentId.value++;
   const newExperience = {
-    id: CurrentId,
-    email: null,
-    mNumber: null,
+    id: currentId,
+    position: null,
+    employer: null,
     startDate: null,
     endDate: null,
     description: null,
   };
   experiences.value.push(newExperience);
+  sessionStorage.setItem('experiences', JSON.stringify(experiences.value));
+  sessionStorage.setItem('currentId', currentId.value);
 }
 
 const router = useRouter();

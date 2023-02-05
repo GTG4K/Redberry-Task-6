@@ -51,14 +51,37 @@
 
 <script setup>
 import FormContainer from '../components/ui/FormContainer.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-const name = ref('');
-const lastName = ref('');
-const description = ref('');
-const mail = ref('');
-const mNumber = ref('');
+// sessionStorage
+const sessionName = sessionStorage.getItem('name');
+const sessionLastName = sessionStorage.getItem('lastName');
+const sessionDescription = sessionStorage.getItem('description');
+const sessionMail = sessionStorage.getItem('mail');
+const sessionMNumber = sessionStorage.getItem('mNumber');
+
+const name = ref(sessionName || '');
+const lastName = ref(sessionLastName || '');
+const description = ref(sessionDescription || '');
+const mail = ref(sessionMail || '');
+const mNumber = ref(sessionMNumber || '');
+
+watch(name, () => {
+  sessionStorage.setItem('name', name.value);
+});
+watch(lastName, () => {
+  sessionStorage.setItem('lastName', lastName.value);
+});
+watch(description, () => {
+  sessionStorage.setItem('description', description.value);
+});
+watch(mail, () => {
+  sessionStorage.setItem('mail', mail.value);
+});
+watch(mNumber, () => {
+  sessionStorage.setItem('mNumber', mNumber.value);
+});
 
 const router = useRouter();
 

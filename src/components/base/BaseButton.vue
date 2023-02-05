@@ -1,5 +1,5 @@
 <template>
-  <button v-if="props.size === 'small'" class="small" @click="redirectBack">-</button>
+  <button v-if="props.size === 'small'" class="small" @click="redirectHome">-</button>
   <button v-else :type="props.type" :class="styling" @click="redirectTo">
     <h2>
       <slot></slot>
@@ -20,8 +20,9 @@ function redirectTo() {
   }
 }
 
-function redirectBack() {
-  router.back();
+function redirectHome() {
+  sessionStorage.clear();
+  router.push('/home');
 }
 
 const styling = computed(() => {

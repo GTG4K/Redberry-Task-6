@@ -13,13 +13,14 @@
 import { ref } from 'vue';
 
 const props = defineProps(['title', 'placeholder', 'modelValue']);
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'textInput']);
 
 const inputValue = ref(props.modelValue);
 
 function updateValue(e) {
   inputValue.value = e.target.value;
   emit('update:modelValue', inputValue.value);
+  emit('textInput');
 }
 </script>
 

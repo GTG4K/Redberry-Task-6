@@ -11,6 +11,8 @@
             title="სასწავლებელი"
             hint="მინიმუმ 2 სიმბოლო"
             placeholder="შუჩიინ აკადემია"
+            v-model="education.school"
+            @textInput="updateEducation"
           ></base-text>
           <div class="duo">
             <base-select
@@ -18,10 +20,25 @@
               loading="true"
               title="ხარისხი"
             ></base-select>
-            <base-select v-else title="ხარისხი" :options="degrees"></base-select>
-            <base-date title="დამთავრების რიცხვი"></base-date>
+            <base-select
+              v-else
+              title="ხარისხი"
+              :options="degrees"
+              @selectInput="updateEducation"
+              v-model="education.degree"
+            ></base-select>
+            <base-date
+              title="დამთავრების რიცხვი"
+              @dateInput="updateEducation"
+              v-model="education.completionDate"
+            ></base-date>
           </div>
-          <base-textarea title="აღწერა" placeholder="განათლების აღწერა"></base-textarea>
+          <base-textarea
+            title="აღწერა"
+            placeholder="განათლების აღწერა"
+            @textInput="updateEducation"
+            v-model="education.description"
+          ></base-textarea>
           <div class="separator"></div>
         </div>
         <base-button @click="addEducation" theme="blue">
@@ -33,26 +50,31 @@
         <base-button @click="previousForm">უკან</base-button>
       </template>
     </form-container>
-    <div class="resume"></div>
+    <resume-container :educations="educations"></resume-container>
   </main>
 </template>
 
 <script setup>
 import FormContainer from '../components/ui/FormContainer.vue';
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 const router = useRouter();
 
-let CurrentId = 1;
-const educations = ref([
-  {
-    id: CurrentId,
-    school: null,
-    degree: null,
-    completionDate: null,
-    description: null,
-  },
-]);
+const sessionEducations = JSON.parse(sessionStorage.getItem('educations'));
+const sessionCurrentId = sessionStorage.getItem('eduCurrentId');
+
+const currentId = ref(sessionCurrentId || 1);
+const educations = ref(
+  sessionEducations || [
+    {
+      id: currentId,
+      school: null,
+      degree: null,
+      completionDate: null,
+      description: null,
+    },
+  ]
+);
 const degrees = ref([]);
 const degreesLoaded = ref(false);
 
@@ -63,16 +85,22 @@ fetch('https://resume.redberryinternship.ge/api/degrees')
     degreesLoaded.value = true;
   });
 
+function updateEducation() {
+  sessionStorage.setItem('educations', JSON.stringify(educations.value));
+}
+
 function addEducation() {
-  CurrentId++;
+  currentId.value++;
   const newEducation = {
-    id: CurrentId,
+    id: currentId.value,
     school: null,
     degree: null,
     completionDate: null,
     description: null,
   };
   educations.value.push(newEducation);
+  sessionStorage.setItem('educations', JSON.stringify(educations.value));
+  sessionStorage.setItem('eduCurrentId', currentId.value);
 }
 function nextForm() {
   router.push('/resume');

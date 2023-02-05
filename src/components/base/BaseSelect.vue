@@ -29,10 +29,12 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-const props = defineProps(['title', 'loading', 'options']);
+const props = defineProps(['title', 'loading', 'options', 'modelValue']);
+const emit = defineEmits(['update:modelValue', 'selectInput']);
 
-const selectedDegree = ref(null);
+const selectedDegree = ref(props.modelValue || null);
 const isSelected = ref(false);
+
 function toggleSelect() {
   isSelected.value = !isSelected.value;
 }
@@ -40,6 +42,8 @@ function toggleSelect() {
 function changeSelect(option) {
   selectedDegree.value = option;
   isSelected.value = !isSelected.value;
+  emit('update:modelValue', selectedDegree.value);
+  emit('selectInput');
 }
 
 const selectStyling = computed(() => {
