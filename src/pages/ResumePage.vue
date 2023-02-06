@@ -14,6 +14,9 @@
 <script setup></script>
 
 <style scoped lang="scss">
+* {
+  font-family: 'HelveticaNeue';
+}
 .resume-page {
   display: grid;
   grid-template-columns: 450px 1fr 450px;

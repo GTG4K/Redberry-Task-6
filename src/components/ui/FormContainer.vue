@@ -38,8 +38,6 @@ const props = defineProps(['title', 'step']);
   display: flex;
   flex-direction: column;
   gap: 2.2rem;
-  height: 70vh;
-  overflow-y: auto;
   padding-right: 5px;
 }
 .form-header {

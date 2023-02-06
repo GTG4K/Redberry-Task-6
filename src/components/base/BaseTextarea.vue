@@ -5,6 +5,7 @@
       @input="updateValue"
       :placeholder="props.placeholder"
       :value="inputValue"
+      :class="validation"
     ></textarea>
   </div>
 </template>
@@ -12,7 +13,7 @@
 <script setup>
 import { ref } from 'vue';
 
-const props = defineProps(['title', 'placeholder', 'modelValue']);
+const props = defineProps(['title', 'placeholder', 'validation', 'modelValue']);
 const emit = defineEmits(['update:modelValue', 'textInput']);
 
 const inputValue = ref(props.modelValue);
@@ -30,6 +31,9 @@ function updateValue(e) {
   gap: 0.4rem;
   flex-direction: column;
 
+  .passed {
+    border: 1px solid hsla(105, 64%, 69%, 1);
+  }
   textarea {
     resize: none;
     height: 80px;

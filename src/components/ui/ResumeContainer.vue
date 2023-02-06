@@ -16,7 +16,7 @@
           {{ description }}
         </p>
       </div>
-      <div class="img"></div>
+      <img id="profile" v-if="img" :src="img" alt="surati" />
     </div>
     <div class="experience">
       <div class="separator"></div>
@@ -84,6 +84,7 @@ const props = defineProps([
   'lastName',
   'mNumber',
   'mail',
+  'img',
   'description',
   'experiences',
   'educations',
@@ -94,6 +95,7 @@ const sessionLastName = sessionStorage.getItem('lastName');
 const sessionDescription = sessionStorage.getItem('description');
 const sessionMail = sessionStorage.getItem('mail');
 const sessionMNumber = sessionStorage.getItem('mNumber');
+const sessionImgUrl = sessionStorage.getItem('imgUrl');
 const sessionExperiences = JSON.parse(sessionStorage.getItem('experiences'));
 const sessionEducations = JSON.parse(sessionStorage.getItem('educations'));
 
@@ -108,6 +110,9 @@ const description = computed(() => {
 });
 const mNumber = computed(() => {
   return `${props.mNumber || sessionMNumber || ''}`;
+});
+const img = computed(() => {
+  return `${props.img || sessionImgUrl || ''}`;
 });
 const experiences = computed(() => {
   return props.experiences || sessionExperiences;
@@ -131,10 +136,10 @@ const educations = computed(() => {
       gap: 10px;
     }
   }
-  .img {
-    background: red;
+  #profile {
     width: 250px;
     height: 250px;
+    object-fit: cover;
     border-radius: 50%;
   }
   h1 {

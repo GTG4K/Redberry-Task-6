@@ -3,13 +3,26 @@
     <h2>{{ props.title }}</h2>
     <div>
       <label for="file">ატვირთვა</label>
-      <input type="file" id="file" />
+      <input type="file" id="file" @change="updateInput" />
     </div>
   </div>
 </template>
 
 <script setup>
-const props = defineProps(['title']);
+import { ref } from 'vue';
+const props = defineProps(['title', 'modelValue']);
+const emit = defineEmits(['update:modelValue', 'fileInput']);
+
+function updateInput(e) {
+  const fr = new FileReader();
+  fr.readAsDataURL(e.target.files[0]);
+
+  fr.addEventListener('load', () => {
+    const url = fr.result;
+    emit('update:modelValue', url);
+    emit('fileInput');
+  });
+}
 </script>
 
 <style scoped lang="scss">
