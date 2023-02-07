@@ -11,33 +11,38 @@
             title="თანამდებობა"
             hint="მინიმუმ 2 სიმბოლო"
             placeholder="Full-stack developer"
-            v-model="experience.position"
-            @textInput="updateExperience"
+            v-model="experience.position.value"
+            :validation="experience.position.isValid.value"
+            @textInput="updatePosition(experience)"
           ></base-text>
           <base-text
             title="დამსაქმებელი"
             hint="მინიმუმ 2 სიმბოლო"
             placeholder="Redberry"
-            v-model="experience.employer"
-            @textInput="updateExperience"
+            v-model="experience.employer.value"
+            :validation="experience.employer.isValid.value"
+            @textInput="updateEmployer(experience)"
           ></base-text>
           <div class="duo">
             <base-date
               title="დაწყების რიცხვი"
-              v-model="experience.startDate"
-              @dateInput="updateExperience"
+              v-model="experience.startDate.value"
+              :validation="experience.startDate.isValid.value"
+              @dateInput="updateStartDate(experience)"
             ></base-date>
             <base-date
               title="დამთავრების რიცხვი"
-              v-model="experience.endDate"
-              @dateInput="updateExperience"
+              v-model="experience.endDate.value"
+              :validation="experience.endDate.isValid.value"
+              @dateInput="updateEndDate(experience)"
             ></base-date>
           </div>
           <base-textarea
             title="აღწერა"
             placeholder="როლი თანამდებობაზე და ზოგადი აღწერა"
-            v-model="experience.description"
-            @textInput="updateExperience"
+            v-model="experience.description.value"
+            :validation="experience.description.isValid.value"
+            @textInput="updateDescription(experience)"
           ></base-textarea>
           <div class="separator"></div>
         </div>
@@ -57,6 +62,7 @@
 <script setup>
 import FormContainer from '../components/ui/FormContainer.vue';
 import { useRouter } from 'vue-router';
+import { checkEmptyValidity } from '../validator';
 import { ref } from 'vue';
 
 const sessionExperiences = JSON.parse(sessionStorage.getItem('experiences'));
@@ -67,38 +73,98 @@ const experiences = ref(
   sessionExperiences || [
     {
       id: currentId.value,
-      position: null,
-      employer: null,
-      startDate: null,
-      endDate: null,
-      description: null,
+      position: { value: null, isValid: { value: null } },
+      employer: { value: null, isValid: { value: null } },
+      startDate: { value: null, isValid: { value: null } },
+      endDate: { value: null, isValid: { value: null } },
+      description: { value: null, isValid: { value: null } },
     },
   ]
 );
-
-function updateExperience() {
-  sessionStorage.setItem('experiences', JSON.stringify(experiences.value));
-}
 
 function addExperience() {
   currentId.value++;
   const newExperience = {
     id: currentId,
-    position: null,
-    employer: null,
-    startDate: null,
-    endDate: null,
-    description: null,
+    id: currentId.value,
+    position: { value: null, isValid: { value: null } },
+    employer: { value: null, isValid: { value: null } },
+    startDate: { value: null, isValid: { value: null } },
+    endDate: { value: null, isValid: { value: null } },
+    description: { value: null, isValid: { value: null } },
   };
   experiences.value.push(newExperience);
   sessionStorage.setItem('experiences', JSON.stringify(experiences.value));
   sessionStorage.setItem('currentId', currentId.value);
 }
 
+// CHECK INPUT VALIDITY AND SAVE INPUTS ON CHANGES
+function updatePosition(experience) {
+  checkEmptyValidity(experience.position, experience.position.isValid, false, 2);
+  sessionStorage.setItem('experiences', JSON.stringify(experiences.value));
+}
+function updateEmployer(experience) {
+  checkEmptyValidity(experience.employer, experience.employer.isValid, false, 2);
+  sessionStorage.setItem('experiences', JSON.stringify(experiences.value));
+}
+function updateStartDate(experience) {
+  checkEmptyValidity(experience.startDate, experience.startDate.isValid, false);
+  sessionStorage.setItem('experiences', JSON.stringify(experiences.value));
+}
+function updateEndDate(experience) {
+  checkEmptyValidity(experience.endDate, experience.endDate.isValid, false);
+  sessionStorage.setItem('experiences', JSON.stringify(experiences.value));
+}
+function updateDescription(experience) {
+  checkEmptyValidity(experience.description, experience.description.isValid, false);
+  sessionStorage.setItem('experiences', JSON.stringify(experiences.value));
+}
+
 const router = useRouter();
 
 function nextForm() {
-  router.push('/info/education');
+  let passed = true;
+  experiences.value.forEach((experience) => {
+    if (
+      experience.position.isValid.value === null ||
+      experience.position.isValid.value === 'failed'
+    ) {
+      experience.position.isValid.value = 'failed';
+      passed = false;
+    }
+    if (
+      experience.employer.isValid.value === null ||
+      experience.employer.isValid.value === 'failed'
+    ) {
+      experience.employer.isValid.value = 'failed';
+      passed = false;
+    }
+    if (
+      experience.startDate.isValid.value === null ||
+      experience.startDate.isValid.value === 'failed'
+    ) {
+      experience.startDate.isValid.value = 'failed';
+      passed = false;
+    }
+    if (
+      experience.endDate.isValid.value === null ||
+      experience.endDate.isValid.value === 'failed'
+    ) {
+      experience.endDate.isValid.value = 'failed';
+      passed = false;
+    }
+    if (
+      experience.description.isValid.value === null ||
+      experience.description.isValid.value === 'failed'
+    ) {
+      experience.description.isValid.value = 'failed';
+      passed = false;
+    }
+  });
+
+  if (passed) {
+    router.push('/info/education');
+  }
 }
 
 function previousForm() {

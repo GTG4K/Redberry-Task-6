@@ -11,8 +11,9 @@
             title="სასწავლებელი"
             hint="მინიმუმ 2 სიმბოლო"
             placeholder="შუჩიინ აკადემია"
-            v-model="education.school"
-            @textInput="updateEducation"
+            v-model="education.school.value"
+            :validation="education.school.isValid.value"
+            @textInput="updateSchool(education)"
           ></base-text>
           <div class="duo">
             <base-select
@@ -24,20 +25,23 @@
               v-else
               title="ხარისხი"
               :options="degrees"
-              @selectInput="updateEducation"
-              v-model="education.degree"
+              @selectInput="updateDegree(education)"
+              :validation="education.degree.isValid.value"
+              v-model="education.degree.value"
             ></base-select>
             <base-date
               title="დამთავრების რიცხვი"
-              @dateInput="updateEducation"
-              v-model="education.completionDate"
+              @dateInput="updateDate(education)"
+              v-model="education.completionDate.value"
+              :validation="education.completionDate.isValid.value"
             ></base-date>
           </div>
           <base-textarea
             title="აღწერა"
             placeholder="განათლების აღწერა"
-            @textInput="updateEducation"
-            v-model="education.description"
+            @textInput="updateDescription(education)"
+            v-model="education.description.value"
+            :validation="education.description.isValid.value"
           ></base-textarea>
           <div class="separator"></div>
         </div>
@@ -58,6 +62,7 @@
 import FormContainer from '../components/ui/FormContainer.vue';
 import { useRouter } from 'vue-router';
 import { ref, watch } from 'vue';
+import { checkEmptyValidity, checkSelectValidity } from '../validator';
 const router = useRouter();
 
 const sessionEducations = JSON.parse(sessionStorage.getItem('educations'));
@@ -68,10 +73,10 @@ const educations = ref(
   sessionEducations || [
     {
       id: currentId,
-      school: null,
-      degree: null,
-      completionDate: null,
-      description: null,
+      school: { value: null, isValid: { value: null } },
+      degree: { value: null, isValid: { value: null } },
+      completionDate: { value: null, isValid: { value: null } },
+      description: { value: null, isValid: { value: null } },
     },
   ]
 );
@@ -85,7 +90,20 @@ fetch('https://resume.redberryinternship.ge/api/degrees')
     degreesLoaded.value = true;
   });
 
-function updateEducation() {
+function updateSchool(education) {
+  checkEmptyValidity(education.school, education.school.isValid, false, 2);
+  sessionStorage.setItem('educations', JSON.stringify(educations.value));
+}
+function updateDegree(education) {
+  checkSelectValidity(education.degree, education.degree.isValid, false);
+  sessionStorage.setItem('educations', JSON.stringify(educations.value));
+}
+function updateDate(education) {
+  checkEmptyValidity(education.completionDate, education.completionDate.isValid, false);
+  sessionStorage.setItem('educations', JSON.stringify(educations.value));
+}
+function updateDescription(education) {
+  checkEmptyValidity(education.description, education.description.isValid, false);
   sessionStorage.setItem('educations', JSON.stringify(educations.value));
 }
 
@@ -93,17 +111,51 @@ function addEducation() {
   currentId.value++;
   const newEducation = {
     id: currentId.value,
-    school: null,
-    degree: null,
-    completionDate: null,
-    description: null,
+    school: { value: null, isValid: { value: null } },
+    degree: { value: null, isValid: { value: null } },
+    completionDate: { value: null, isValid: { value: null } },
+    description: { value: null, isValid: { value: null } },
   };
   educations.value.push(newEducation);
   sessionStorage.setItem('educations', JSON.stringify(educations.value));
   sessionStorage.setItem('eduCurrentId', currentId.value);
 }
 function nextForm() {
-  router.push('/resume');
+  let passed = true;
+  educations.value.forEach((education) => {
+    if (
+      education.school.isValid.value === null ||
+      education.school.isValid.value === 'failed'
+    ) {
+      education.school.isValid.value = 'failed';
+      passed = false;
+    }
+    if (
+      education.degree.isValid.value === null ||
+      education.degree.isValid.value === 'failed'
+    ) {
+      education.degree.isValid.value = 'failed';
+      passed = false;
+    }
+    if (
+      education.completionDate.isValid.value === null ||
+      education.completionDate.isValid.value === 'failed'
+    ) {
+      education.completionDate.isValid.value = 'failed';
+      passed = false;
+    }
+    if (
+      education.description.isValid.value === null ||
+      education.description.isValid.value === 'failed'
+    ) {
+      education.description.isValid.value = 'failed';
+      passed = false;
+    }
+  });
+
+  if (passed) {
+    router.push('/resume');
+  }
 }
 function previousForm() {
   router.back();

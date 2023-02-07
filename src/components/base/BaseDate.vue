@@ -1,13 +1,18 @@
 <template>
   <div class="input-container">
     <h2>{{ props.title }}</h2>
-    <input type="date" :value="inputValue" @input="updateValue" />
+    <input
+      type="date"
+      :value="inputValue"
+      @input="updateValue"
+      :class="props.validation"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-const props = defineProps(['title', 'modelValue']);
+const props = defineProps(['title', 'modelValue', 'validation']);
 const emit = defineEmits(['update:modelValue', 'dateInput']);
 
 const inputValue = ref(props.modelValue);
@@ -24,6 +29,13 @@ function updateValue(e) {
   display: flex;
   gap: 0.4rem;
   flex-direction: column;
+
+  .passed {
+    border: 1px solid hsla(105, 64%, 69%, 1);
+  }
+  .failed {
+    border: 1px solid hsla(0, 83%, 63%, 1);
+  }
 
   input {
     background: #ffffff;

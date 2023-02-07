@@ -34,6 +34,9 @@ function updateValue(e) {
   .passed {
     border: 1px solid hsla(105, 64%, 69%, 1);
   }
+  .failed {
+    border: 1px solid hsla(0, 83%, 63%, 1);
+  }
   textarea {
     resize: none;
     height: 80px;

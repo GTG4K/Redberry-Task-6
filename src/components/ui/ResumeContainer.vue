@@ -28,22 +28,22 @@
       >
         <div class="exp-details">
           <h2 class="black" v-if="experience.position || experience.employer">
-            {{ experience.position }}, {{ experience.employer }}
+            {{ experience.position.value }}, {{ experience.employer.value }}
           </h2>
           <h2 class="grey" v-if="experience.startDate || experience.endDate">
-            {{ experience.startDate }} - {{ experience.endDate }}
+            {{ experience.startDate.value }} - {{ experience.endDate.value }}
           </h2>
         </div>
         <p v-if="experience.description">
-          {{ experience.description }}
+          {{ experience.description.value }}
         </p>
         <div
           v-if="
-            experience.position ||
-            experience.employer ||
-            experience.startDate ||
-            experience.endDate ||
-            experience.description
+            experience.position.value ||
+            experience.employer.value ||
+            experience.startDate.value ||
+            experience.endDate.value ||
+            experience.description.value
           "
           class="separator"
         ></div>
@@ -53,22 +53,22 @@
       <h2>განათლება</h2>
       <div class="experience-block" v-for="education in educations" :key="education.id">
         <div class="exp-details">
-          <h2 class="black" v-if="education.school">
-            {{ education.school }}, {{ education.degree.title || '' }}
+          <h2 class="black" v-if="education.school.value">
+            {{ education.school.value }}, {{ education.degree.value.title || '' }}
           </h2>
           <h2 class="grey" v-if="education.completionDate">
-            {{ education.completionDate }}
+            {{ education.completionDate.value }}
           </h2>
         </div>
-        <p v-if="education.description">
-          {{ education.description }}
+        <p v-if="education.description.value">
+          {{ education.description.value }}
         </p>
         <div
           v-if="
-            education.school ||
-            education.degree ||
-            education.completionDate ||
-            education.description
+            education.school.value ||
+            education.degree.value ||
+            education.completionDate.value ||
+            education.description.value
           "
           class="separator"
         ></div>

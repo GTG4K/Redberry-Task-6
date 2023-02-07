@@ -10,7 +10,7 @@
   <!-- if loaded -->
   <div v-else class="select-container">
     <h2>{{ props.title }}</h2>
-    <div class="select-body" @click="toggleSelect">
+    <div class="select-body" :class="validation" @click="toggleSelect">
       <span>{{ selectedDegree?.title || 'აირჩიეთ ხარისხი' }}</span>
       <img src="../../assets/svg/arrow-down.svg" alt="" />
     </div>
@@ -29,7 +29,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-const props = defineProps(['title', 'loading', 'options', 'modelValue']);
+const props = defineProps(['title', 'loading', 'options', 'modelValue', 'validation']);
 const emit = defineEmits(['update:modelValue', 'selectInput']);
 
 const selectedDegree = ref(props.modelValue || null);
@@ -45,6 +45,10 @@ function changeSelect(option) {
   emit('update:modelValue', selectedDegree.value);
   emit('selectInput');
 }
+
+const validation = computed(() => {
+  return { passed: props.validation === 'passed', failed: props.validation === 'failed' };
+});
 
 const selectStyling = computed(() => {
   return { selected: isSelected.value };
@@ -74,6 +78,13 @@ const selectStyling = computed(() => {
   justify-content: space-between;
   cursor: pointer;
   user-select: none;
+
+  &.passed {
+    border: 1px solid hsla(105, 64%, 69%, 1);
+  }
+  &.failed {
+    border: 1px solid hsla(0, 83%, 63%, 1);
+  }
 
   &:hover {
     background: rgb(230, 230, 230);

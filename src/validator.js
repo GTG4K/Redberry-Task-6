@@ -24,11 +24,19 @@ function checkEmailValidity(input, inputValidator) {
   }
 }
 
-function checkEmptyValidity(input, inputValidator, emptyAllowed = true) {
-  if (input.value.length >= 1) {
+function checkEmptyValidity(input, inputValidator, emptyAllowed = true, length = 1) {
+  if (input.value.length >= length) {
     inputValidator.value = 'passed';
-  } else if (input.value.length === 0) {
+  } else {
     emptyAllowed ? (inputValidator.value = null) : (inputValidator.value = 'failed');
+  }
+}
+
+function checkSelectValidity(input, inputValidator) {
+  if (input.value.title) {
+    inputValidator.value = 'passed';
+  } else {
+    inputValidator.value = 'failed';
   }
 }
 
@@ -37,4 +45,5 @@ export {
   checkMobileValidity,
   checkEmailValidity,
   checkEmptyValidity,
+  checkSelectValidity,
 };
