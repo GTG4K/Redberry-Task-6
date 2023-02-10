@@ -62,8 +62,19 @@
 import FormContainer from '../components/ui/FormContainer.vue';
 import { useRouter } from 'vue-router';
 import { ref, watch } from 'vue';
-import { checkEmptyValidity, checkSelectValidity } from '../validator';
+import axios from 'axios';
+import { checkEmptyValidity, checkSelectValidity, checkPassed } from '../validator';
 const router = useRouter();
+
+// Private info page data
+const sessionName = sessionStorage.getItem('name');
+const sessionLastName = sessionStorage.getItem('lastName');
+const sessionDescription = sessionStorage.getItem('description');
+const sessionMail = sessionStorage.getItem('mail');
+const sessionMNumber = sessionStorage.getItem('mNumber');
+const sessionImgUrl = sessionStorage.getItem('imgUrl');
+// experience data
+const sessionExperiences = JSON.parse(sessionStorage.getItem('experiences'));
 
 const sessionEducations = JSON.parse(sessionStorage.getItem('educations'));
 const sessionCurrentId = sessionStorage.getItem('eduCurrentId');
@@ -120,41 +131,75 @@ function addEducation() {
   sessionStorage.setItem('educations', JSON.stringify(educations.value));
   sessionStorage.setItem('eduCurrentId', currentId.value);
 }
+
 function nextForm() {
   let passed = true;
-  educations.value.forEach((education) => {
-    if (
-      education.school.isValid.value === null ||
-      education.school.isValid.value === 'failed'
-    ) {
-      education.school.isValid.value = 'failed';
-      passed = false;
-    }
-    if (
-      education.degree.isValid.value === null ||
-      education.degree.isValid.value === 'failed'
-    ) {
-      education.degree.isValid.value = 'failed';
-      passed = false;
-    }
-    if (
-      education.completionDate.isValid.value === null ||
-      education.completionDate.isValid.value === 'failed'
-    ) {
-      education.completionDate.isValid.value = 'failed';
-      passed = false;
-    }
-    if (
-      education.description.isValid.value === null ||
-      education.description.isValid.value === 'failed'
-    ) {
-      education.description.isValid.value = 'failed';
-      passed = false;
-    }
-  });
-
+  // educations.value.forEach((education) => {
+  //   passed = checkPassed(education.school.isValid);
+  //   passed = checkPassed(education.degree.isValid);
+  //   passed = checkPassed(education.completionDate.isValid);
+  //   passed = checkPassed(education.description.isValid);
+  // });
   if (passed) {
-    router.push('/resume');
+    // SEND DATA
+    const latestEducations = educations.value;
+    const formatedNumber = sessionMNumber.replace(/ /g, '');
+    let formatedFile = null;
+    const formatedExperiences = [];
+    const formatedEducations = [];
+    //format experience and educations array properly
+    sessionExperiences.forEach((experience) => {
+      const formatedExperience = {
+        position: experience.position.value,
+        employer: experience.employer.value,
+        start_date: experience.start_date.value.replaceAll('-', '/'),
+        due_date: experience.due_date.value.replaceAll('-', '/'),
+        description: experience.description.value,
+      };
+      formatedExperiences.push(formatedExperience);
+    });
+    latestEducations.forEach((education) => {
+      const formatedEducation = {
+        institute: education.school.value,
+        degree_id: education.degree.value.id,
+        due_date: education.completionDate.value.replaceAll('-', '/'),
+        description: education.description.value,
+      };
+      formatedEducations.push(formatedEducation);
+    });
+
+    fetch(sessionImgUrl)
+      .then((res) => res.blob())
+      .then((blob) => {
+        formatedFile = blob;
+
+        const data = {
+          name: sessionName,
+          surname: sessionLastName,
+          email: sessionMail,
+          phone_number: sessionMNumber.replace(/ /g, ''),
+          experiences: formatedExperiences,
+          educations: formatedEducations,
+          image: formatedFile,
+          about_me: sessionDescription || '',
+        };
+
+        console.log(formatedFile);
+        console.log(data);
+
+        axios
+          .post('https://resume.redberryinternship.ge/api/cvs', data, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          })
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => console.log(error));
+      });
+
+    // router.push('/resume');
   }
 }
 function previousForm() {

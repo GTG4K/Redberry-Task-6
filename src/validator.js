@@ -40,7 +40,16 @@ function checkSelectValidity(input, inputValidator) {
   }
 }
 
+function checkPassed(inputValidator) {
+  if (inputValidator.value === null || inputValidator.value === 'failed') {
+    inputValidator.value = 'failed';
+    return false;
+  }
+  return true;
+}
+
 export {
+  checkPassed,
   checkLanguageValidity,
   checkMobileValidity,
   checkEmailValidity,

@@ -20,7 +20,7 @@ function updateInput(e) {
   fr.addEventListener('load', () => {
     const url = fr.result;
     emit('update:modelValue', url);
-    emit('fileInput');
+    emit('fileInput', e.target.files[0]);
   });
 }
 </script>

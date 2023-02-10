@@ -30,8 +30,8 @@
           <h2 class="black" v-if="experience.position || experience.employer">
             {{ experience.position.value }}, {{ experience.employer.value }}
           </h2>
-          <h2 class="grey" v-if="experience.startDate || experience.endDate">
-            {{ experience.startDate.value }} - {{ experience.endDate.value }}
+          <h2 class="grey" v-if="experience.start_date || experience.due_date">
+            {{ experience.start_date.value }} - {{ experience.due_date.value }}
           </h2>
         </div>
         <p v-if="experience.description">
@@ -41,8 +41,8 @@
           v-if="
             experience.position.value ||
             experience.employer.value ||
-            experience.startDate.value ||
-            experience.endDate.value ||
+            experience.start_date.value ||
+            experience.due_date.value ||
             experience.description.value
           "
           class="separator"
@@ -53,8 +53,11 @@
       <h2>განათლება</h2>
       <div class="experience-block" v-for="education in educations" :key="education.id">
         <div class="exp-details">
-          <h2 class="black" v-if="education.school.value">
-            {{ education.school.value }}, {{ education.degree.value.title || '' }}
+          <h2
+            class="black"
+            v-if="education.school.value || education.degree.value?.title"
+          >
+            {{ education.school.value }}, {{ education.degree.value?.title || '' }}
           </h2>
           <h2 class="grey" v-if="education.completionDate">
             {{ education.completionDate.value }}

@@ -26,14 +26,14 @@
           <div class="duo">
             <base-date
               title="დაწყების რიცხვი"
-              v-model="experience.startDate.value"
-              :validation="experience.startDate.isValid.value"
+              v-model="experience.start_date.value"
+              :validation="experience.start_date.isValid.value"
               @dateInput="updateStartDate(experience)"
             ></base-date>
             <base-date
               title="დამთავრების რიცხვი"
-              v-model="experience.endDate.value"
-              :validation="experience.endDate.isValid.value"
+              v-model="experience.due_date.value"
+              :validation="experience.due_date.isValid.value"
               @dateInput="updateEndDate(experience)"
             ></base-date>
           </div>
@@ -62,7 +62,7 @@
 <script setup>
 import FormContainer from '../components/ui/FormContainer.vue';
 import { useRouter } from 'vue-router';
-import { checkEmptyValidity } from '../validator';
+import { checkEmptyValidity, checkPassed } from '../validator';
 import { ref } from 'vue';
 
 const sessionExperiences = JSON.parse(sessionStorage.getItem('experiences'));
@@ -75,8 +75,8 @@ const experiences = ref(
       id: currentId.value,
       position: { value: null, isValid: { value: null } },
       employer: { value: null, isValid: { value: null } },
-      startDate: { value: null, isValid: { value: null } },
-      endDate: { value: null, isValid: { value: null } },
+      start_date: { value: null, isValid: { value: null } },
+      due_date: { value: null, isValid: { value: null } },
       description: { value: null, isValid: { value: null } },
     },
   ]
@@ -89,8 +89,8 @@ function addExperience() {
     id: currentId.value,
     position: { value: null, isValid: { value: null } },
     employer: { value: null, isValid: { value: null } },
-    startDate: { value: null, isValid: { value: null } },
-    endDate: { value: null, isValid: { value: null } },
+    start_date: { value: null, isValid: { value: null } },
+    due_date: { value: null, isValid: { value: null } },
     description: { value: null, isValid: { value: null } },
   };
   experiences.value.push(newExperience);
@@ -108,11 +108,11 @@ function updateEmployer(experience) {
   sessionStorage.setItem('experiences', JSON.stringify(experiences.value));
 }
 function updateStartDate(experience) {
-  checkEmptyValidity(experience.startDate, experience.startDate.isValid, false);
+  checkEmptyValidity(experience.start_date, experience.start_date.isValid, false);
   sessionStorage.setItem('experiences', JSON.stringify(experiences.value));
 }
 function updateEndDate(experience) {
-  checkEmptyValidity(experience.endDate, experience.endDate.isValid, false);
+  checkEmptyValidity(experience.due_date, experience.due_date.isValid, false);
   sessionStorage.setItem('experiences', JSON.stringify(experiences.value));
 }
 function updateDescription(experience) {
@@ -125,41 +125,11 @@ const router = useRouter();
 function nextForm() {
   let passed = true;
   experiences.value.forEach((experience) => {
-    if (
-      experience.position.isValid.value === null ||
-      experience.position.isValid.value === 'failed'
-    ) {
-      experience.position.isValid.value = 'failed';
-      passed = false;
-    }
-    if (
-      experience.employer.isValid.value === null ||
-      experience.employer.isValid.value === 'failed'
-    ) {
-      experience.employer.isValid.value = 'failed';
-      passed = false;
-    }
-    if (
-      experience.startDate.isValid.value === null ||
-      experience.startDate.isValid.value === 'failed'
-    ) {
-      experience.startDate.isValid.value = 'failed';
-      passed = false;
-    }
-    if (
-      experience.endDate.isValid.value === null ||
-      experience.endDate.isValid.value === 'failed'
-    ) {
-      experience.endDate.isValid.value = 'failed';
-      passed = false;
-    }
-    if (
-      experience.description.isValid.value === null ||
-      experience.description.isValid.value === 'failed'
-    ) {
-      experience.description.isValid.value = 'failed';
-      passed = false;
-    }
+    passed = checkPassed(experience.position.isValid);
+    passed = checkPassed(experience.employer.isValid);
+    passed = checkPassed(experience.start_date.isValid);
+    passed = checkPassed(experience.due_date.isValid);
+    passed = checkPassed(experience.description.isValid);
   });
 
   if (passed) {

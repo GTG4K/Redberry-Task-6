@@ -62,6 +62,7 @@ import {
   checkMobileValidity,
   checkEmailValidity,
   checkEmptyValidity,
+  checkPassed,
 } from '../validator';
 import { ref, watch, computed } from 'vue';
 import { useRouter } from 'vue-router';
@@ -135,26 +136,11 @@ const router = useRouter();
 
 function nextForm() {
   let passed = true;
-  if (nameIsValid.value === null || nameIsValid.value === 'failed') {
-    nameIsValid.value = 'failed';
-    passed = false;
-  }
-  if (lastNameIsValid.value === null || lastNameIsValid.value === 'failed') {
-    lastNameIsValid.value = 'failed';
-    passed = false;
-  }
-  if (mNumberIsValid.value === null || mNumberIsValid.value === 'failed') {
-    mNumberIsValid.value = 'failed';
-    passed = false;
-  }
-  if (mailIsValid.value === null || mailIsValid.value === 'failed') {
-    mailIsValid.value = 'failed';
-    passed = false;
-  }
-  if (imgUrlIsValid.value === null || imgUrlIsValid.value === 'failed') {
-    imgUrlIsValid.value = 'failed';
-    passed = false;
-  }
+  passed = checkPassed(nameIsValid);
+  passed = checkPassed(lastNameIsValid);
+  passed = checkPassed(mNumberIsValid);
+  passed = checkPassed(mailIsValid);
+  passed = checkPassed(imgUrlIsValid);
 
   if (passed) {
     router.push('/info/experience');
