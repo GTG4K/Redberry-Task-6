@@ -10,7 +10,7 @@
         :lastName="fetchedData.surname"
         :mNumber="fetchedData.phone_number"
         :mail="fetchedData.email"
-        :img="fetchedData.image"
+        :img="resumeImage"
         :description="fetchedData.about_me"
         :experiences="resumeExperiences"
         :educations="resumeEducations"
@@ -40,6 +40,7 @@ const fetchedData = ref(null);
 const id = ref(0);
 const resumeExperiences = ref([]);
 const resumeEducations = ref([]);
+const resumeImage = ref('');
 
 //get Stored form data
 const sessionName = sessionStorage.getItem('name');
@@ -135,6 +136,8 @@ fetch(sessionImgUrl)
           };
           resumeEducations.value.push(newEducation);
         });
+
+        resumeImage.value = `https://resume.redberryinternship.ge${fetchedData.value.image}`;
       })
       .catch((error) => console.log(error));
   });
