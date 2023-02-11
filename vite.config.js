@@ -5,9 +5,7 @@ import vue from '@vitejs/plugin-vue';
 export default defineConfig({
   css: {
     preprocessorOptions: {
-      scss: {
-        additionalData: `@import "./src/assets/scss/colors.scss";`,
-      },
+      scss: {},
     },
   },
   plugins: [vue()],

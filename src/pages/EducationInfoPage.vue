@@ -11,8 +11,8 @@
             title="სასწავლებელი"
             hint="მინიმუმ 2 სიმბოლო"
             placeholder="შუჩიინ აკადემია"
-            v-model="education.school.value"
-            :validation="education.school.isValid.value"
+            v-model="education.institute.value"
+            :validation="education.institute.isValid.value"
             @textInput="updateSchool(education)"
           ></base-text>
           <div class="duo">
@@ -32,8 +32,8 @@
             <base-date
               title="დამთავრების რიცხვი"
               @dateInput="updateDate(education)"
-              v-model="education.completionDate.value"
-              :validation="education.completionDate.isValid.value"
+              v-model="education.due_date.value"
+              :validation="education.due_date.isValid.value"
             ></base-date>
           </div>
           <base-textarea
@@ -62,7 +62,6 @@
 import FormContainer from '../components/ui/FormContainer.vue';
 import { useRouter } from 'vue-router';
 import { ref, watch } from 'vue';
-import axios from 'axios';
 import { checkEmptyValidity, checkSelectValidity, checkPassed } from '../validator';
 const router = useRouter();
 
@@ -84,9 +83,9 @@ const educations = ref(
   sessionEducations || [
     {
       id: currentId,
-      school: { value: null, isValid: { value: null } },
+      institute: { value: null, isValid: { value: null } },
       degree: { value: null, isValid: { value: null } },
-      completionDate: { value: null, isValid: { value: null } },
+      due_date: { value: null, isValid: { value: null } },
       description: { value: null, isValid: { value: null } },
     },
   ]
@@ -102,7 +101,7 @@ fetch('https://resume.redberryinternship.ge/api/degrees')
   });
 
 function updateSchool(education) {
-  checkEmptyValidity(education.school, education.school.isValid, false, 2);
+  checkEmptyValidity(education.institute, education.institute.isValid, false, 2);
   sessionStorage.setItem('educations', JSON.stringify(educations.value));
 }
 function updateDegree(education) {
@@ -110,7 +109,7 @@ function updateDegree(education) {
   sessionStorage.setItem('educations', JSON.stringify(educations.value));
 }
 function updateDate(education) {
-  checkEmptyValidity(education.completionDate, education.completionDate.isValid, false);
+  checkEmptyValidity(education.due_date, education.due_date.isValid, false);
   sessionStorage.setItem('educations', JSON.stringify(educations.value));
 }
 function updateDescription(education) {
@@ -122,9 +121,9 @@ function addEducation() {
   currentId.value++;
   const newEducation = {
     id: currentId.value,
-    school: { value: null, isValid: { value: null } },
+    institute: { value: null, isValid: { value: null } },
     degree: { value: null, isValid: { value: null } },
-    completionDate: { value: null, isValid: { value: null } },
+    due_date: { value: null, isValid: { value: null } },
     description: { value: null, isValid: { value: null } },
   };
   educations.value.push(newEducation);
@@ -134,72 +133,14 @@ function addEducation() {
 
 function nextForm() {
   let passed = true;
-  // educations.value.forEach((education) => {
-  //   passed = checkPassed(education.school.isValid);
-  //   passed = checkPassed(education.degree.isValid);
-  //   passed = checkPassed(education.completionDate.isValid);
-  //   passed = checkPassed(education.description.isValid);
-  // });
+  educations.value.forEach((education) => {
+    passed = checkPassed(education.institute.isValid);
+    passed = checkPassed(education.degree.isValid);
+    passed = checkPassed(education.due_date.isValid);
+    passed = checkPassed(education.description.isValid);
+  });
   if (passed) {
-    // SEND DATA
-    const latestEducations = educations.value;
-    const formatedNumber = sessionMNumber.replace(/ /g, '');
-    let formatedFile = null;
-    const formatedExperiences = [];
-    const formatedEducations = [];
-    //format experience and educations array properly
-    sessionExperiences.forEach((experience) => {
-      const formatedExperience = {
-        position: experience.position.value,
-        employer: experience.employer.value,
-        start_date: experience.start_date.value.replaceAll('-', '/'),
-        due_date: experience.due_date.value.replaceAll('-', '/'),
-        description: experience.description.value,
-      };
-      formatedExperiences.push(formatedExperience);
-    });
-    latestEducations.forEach((education) => {
-      const formatedEducation = {
-        institute: education.school.value,
-        degree_id: education.degree.value.id,
-        due_date: education.completionDate.value.replaceAll('-', '/'),
-        description: education.description.value,
-      };
-      formatedEducations.push(formatedEducation);
-    });
-
-    fetch(sessionImgUrl)
-      .then((res) => res.blob())
-      .then((blob) => {
-        formatedFile = blob;
-
-        const data = {
-          name: sessionName,
-          surname: sessionLastName,
-          email: sessionMail,
-          phone_number: sessionMNumber.replace(/ /g, ''),
-          experiences: formatedExperiences,
-          educations: formatedEducations,
-          image: formatedFile,
-          about_me: sessionDescription || '',
-        };
-
-        console.log(formatedFile);
-        console.log(data);
-
-        axios
-          .post('https://resume.redberryinternship.ge/api/cvs', data, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          })
-          .then((response) => {
-            console.log(response);
-          })
-          .catch((error) => console.log(error));
-      });
-
-    // router.push('/resume');
+    router.push('/resume');
   }
 }
 function previousForm() {

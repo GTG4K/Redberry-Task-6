@@ -9,7 +9,11 @@ function checkLanguageValidity(input, inputValidator) {
 
 function checkMobileValidity(input, inputValidator) {
   const mNumberValid = /[0-9\s+]/;
-  if (input.value.match(mNumberValid) && input.value.length === 17) {
+  if (
+    input.value.match(mNumberValid) &&
+    input.value.length === 17 &&
+    input.value.startsWith('+995')
+  ) {
     inputValidator.value = 'passed';
   } else {
     inputValidator.value = 'failed';
@@ -17,7 +21,7 @@ function checkMobileValidity(input, inputValidator) {
 }
 
 function checkEmailValidity(input, inputValidator) {
-  if (input.value.toLowerCase().endsWith('@redberry.ge')) {
+  if (input.value.toLowerCase().endsWith('@redberry.ge') && input.value.length >= 13) {
     inputValidator.value = 'passed';
   } else {
     inputValidator.value = 'failed';

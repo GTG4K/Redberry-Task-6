@@ -1,42 +1,54 @@
 <template>
   <div class="resume">
-    <div class="personal">
-      <div class="details">
-        <h1>{{ fullName }}</h1>
-        <div class="extra" v-if="mail">
-          <img src="../../assets/svg/at.svg" alt="" />
-          <h3>{{ mail }}</h3>
+    <div class="private">
+      <div class="private-details">
+        <div class="private-info">
+          <h2>{{ fullName }}</h2>
+          <div class="marked-details">
+            <div class="marked-detail">
+              <img v-if="mail" src="../../assets/svg/at.svg" alt="" />
+              <p class="large">{{ mail }}</p>
+            </div>
+            <div class="marked-detail">
+              <img v-if="mNumber" src="../../assets/svg/phone.svg" alt="" />
+              <p class="large">{{ mNumber }}</p>
+            </div>
+          </div>
         </div>
-        <div class="extra" v-if="mNumber">
-          <img src="../../assets/svg/phone.svg" alt="" />
-          <h3>{{ mNumber }}</h3>
+        <div class="description">
+          <h3 v-if="description">ჩემ შესახებ</h3>
+          <p>{{ description }}</p>
         </div>
-        <h2 v-if="description">ჩემ შესახებ</h2>
-        <p>
-          {{ description }}
-        </p>
       </div>
-      <img id="profile" v-if="img" :src="img" alt="surati" />
+      <img v-if="img" id="profile-img" :src="img" alt="" />
     </div>
-    <div class="experience">
-      <div class="separator"></div>
-      <h2>გამოცდილება</h2>
-      <div
-        class="experience-block"
-        v-for="experience in experiences"
-        :key="experience.id"
-      >
-        <div class="exp-details">
-          <h2 class="black" v-if="experience.position || experience.employer">
-            {{ experience.position.value }}, {{ experience.employer.value }}
-          </h2>
-          <h2 class="grey" v-if="experience.start_date || experience.due_date">
-            {{ experience.start_date.value }} - {{ experience.due_date.value }}
-          </h2>
+    <div v-if="experiences" class="separator"></div>
+    <div v-if="experiences" class="experiences">
+      <h3 class="title">გამოცდილება</h3>
+      <div v-for="experience in experiences" :key="experience.id" class="experience">
+        <div class="duo-holder">
+          <div class="duo">
+            <h4>{{ experience.position.value }}</h4>
+            <h4
+              class="coma"
+              v-if="experience.position.value && experience.employer.value"
+            >
+              ,
+            </h4>
+            <h4>{{ experience.employer.value }}</h4>
+          </div>
+          <div class="duo">
+            <h4 class="faded">{{ experience.start_date.value }}</h4>
+            <h4
+              v-if="experience.start_date.value && experience.due_date.value"
+              class="faded dash"
+            >
+              -
+            </h4>
+            <h4 class="faded">{{ experience.due_date.value }}</h4>
+          </div>
         </div>
-        <p v-if="experience.description">
-          {{ experience.description.value }}
-        </p>
+        <p>{{ experience.description.value }}</p>
         <div
           v-if="
             experience.position.value ||
@@ -49,28 +61,26 @@
         ></div>
       </div>
     </div>
-    <div class="education">
-      <h2>განათლება</h2>
-      <div class="experience-block" v-for="education in educations" :key="education.id">
-        <div class="exp-details">
-          <h2
-            class="black"
-            v-if="education.school.value || education.degree.value?.title"
+    <div v-if="educations" class="experiences">
+      <h3 class="title">განათლება</h3>
+      <div v-for="education in educations" :key="education.id" class="experience">
+        <div class="duo">
+          <h4>{{ education.institute.value }}</h4>
+          <h4
+            class="coma"
+            v-if="education.institute.value && education.degree.value?.title"
           >
-            {{ education.school.value }}, {{ education.degree.value?.title || '' }}
-          </h2>
-          <h2 class="grey" v-if="education.completionDate">
-            {{ education.completionDate.value }}
-          </h2>
+            ,
+          </h4>
+          <h4>{{ education.degree.value?.title || null }}</h4>
         </div>
-        <p v-if="education.description.value">
-          {{ education.description.value }}
-        </p>
+        <h4 class="faded">{{ education.due_date.value }}</h4>
+        <p>{{ education.description.value }}</p>
         <div
           v-if="
-            education.school.value ||
-            education.degree.value ||
-            education.completionDate.value ||
+            education.institute.value ||
+            education.degree.value?.title ||
+            education.due_date.value ||
             education.description.value
           "
           class="separator"
@@ -126,86 +136,116 @@ const educations = computed(() => {
 </script>
 
 <style scoped lang="scss">
+#profile-img {
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 50%;
+}
 .resume {
   padding: 50px;
 }
-.personal {
-  display: grid;
-  grid-template-columns: 1fr 250px;
-  .details {
-    .extra {
-      padding: 10px 0;
-      display: flex;
-      gap: 10px;
-    }
-  }
-  #profile {
-    width: 250px;
-    height: 250px;
-    object-fit: cover;
-    border-radius: 50%;
-  }
-  h1 {
-    padding: 0 0 10px 0;
-  }
-  h2 {
-    padding: 20px 0 15px 0;
-  }
-}
-.experience {
-  & > h2 {
-    padding: 0 0 10px 0;
-  }
-}
-.experience-block {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-.exp-details {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-h2.black {
-  color: hsla(0, 0%, 10%, 1);
-  font-weight: 500;
-}
-h2.grey {
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 20px;
-  font-style: italic;
-  color: hsla(0, 0%, 57%, 1);
-}
-
-h1 {
-  color: hsla(8, 95%, 55%, 1);
-  font-size: 34px;
-  font-weight: 700;
-  line-height: 41.5px;
-}
 
 h2 {
-  color: hsla(8, 95%, 55%, 1);
-  line-height: 22px;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 34px;
+  line-height: 42px;
+  color: #f93b1d;
 }
 
 h3 {
-  font-weight: 500;
+  font-weight: 700;
   font-size: 18px;
-  color: hsla(0, 0%, 10%, 1);
+  line-height: 22px;
+  color: #f93b1d;
+}
+
+h4 {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  color: #1a1a1a;
+  &.coma {
+    padding: 0 8px 0 0;
+  }
+  &.faded {
+    font-style: italic;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #919191;
+    &.dash {
+      padding: 0 8px;
+    }
+  }
 }
 
 p {
-  line-height: 22px;
+  font-weight: 400;
   font-size: 16px;
+  line-height: 22px;
+  color: #000000;
+  &.large {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 21px;
+    color: #1a1a1a;
+  }
+}
+
+.duo {
+  display: flex;
 }
 .separator {
+  margin: 1.2rem 0;
   height: 1px;
-  background: hsla(0, 0%, 78%, 1);
-  margin: 20px 0;
+  background: #c8c8c8;
+}
+.duo-holder {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.private {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 250px;
+
+  .private-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+  }
+  .private-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .marked-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .marked-detail {
+    display: flex;
+    gap: 0.7rem;
+  }
+  .description {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+}
+
+.experiences {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  .experience {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
 }
 </style>
