@@ -46,7 +46,7 @@
           ></base-textarea>
           <div class="separator"></div>
         </div>
-        <base-button @click="addExperience" theme="blue">
+        <base-button @click="addExperience" theme="blue" class="margin-bot">
           მეტი გამოცდილების დამატება
         </base-button>
       </template>
@@ -165,5 +165,9 @@ main {
   display: flex;
   flex-direction: column;
   gap: 2.2rem;
+}
+
+.margin-bot {
+  margin-bottom: 70px;
 }
 </style>

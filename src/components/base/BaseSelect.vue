@@ -97,7 +97,7 @@ const selectStyling = computed(() => {
   position: absolute;
   background: white;
   width: 100%;
-  top: 70px;
+  top: 72px;
   border-radius: 4px;
   user-select: none;
   max-height: 0;
@@ -107,7 +107,7 @@ const selectStyling = computed(() => {
   &.selected {
     max-height: 500px;
     overflow: hidden;
-    border: 1px solid #bcbcbc;
+    box-shadow: 0px 16px 28px rgba(0, 0, 0, 0.4);
   }
 }
 .option {

@@ -18,7 +18,11 @@
             v-model="lastName"
           ></base-text>
         </div>
-        <base-file title="პირადი ფოტოს ატვირთვა" v-model="imgUrl"></base-file>
+        <base-file
+          title="პირადი ფოტოს ატვირთვა"
+          v-model="imgUrl"
+          :validation="imgUrlIsValid"
+        ></base-file>
         <base-textarea
           title="ჩემ შესახებ (არასავალდებულო)"
           placeholder="ზოგადი ინფო შენ შესახებ"
@@ -36,6 +40,7 @@
           title="მობილურის ნომერი"
           hint="უნდა აკმაყოფილებდეს ქართული მობილურის ნომრის ფორმატს"
           placeholder="+995 551 12 34 56"
+          :number="true"
           v-model="mNumber"
           :validation="mNumberIsValid"
         ></base-text>

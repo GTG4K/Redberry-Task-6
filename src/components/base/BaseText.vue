@@ -26,7 +26,14 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-const props = defineProps(['title', 'placeholder', 'hint', 'validation', 'modelValue']);
+const props = defineProps([
+  'title',
+  'placeholder',
+  'hint',
+  'validation',
+  'number',
+  'modelValue',
+]);
 const emit = defineEmits(['update:modelValue', 'textInput']);
 
 const inputValue = ref(props.modelValue);
@@ -36,7 +43,18 @@ const validation = computed(() => {
 });
 
 function updateValue(e) {
-  inputValue.value = e.target.value;
+  let input = e.target.value;
+  if (props.number) {
+    if (
+      input.length === 4 ||
+      input.length === 8 ||
+      input.length === 11 ||
+      input.length === 14
+    ) {
+      input += ' ';
+    }
+  }
+  inputValue.value = input;
   emit('update:modelValue', inputValue.value);
   emit('textInput');
 }

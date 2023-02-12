@@ -1,5 +1,7 @@
 <template>
-  <button v-if="props.size === 'small'" class="small" @click="redirectHome">-</button>
+  <button v-if="props.size === 'small'" class="small" @click="redirectHome">
+    <img src="../../assets/svg/back.svg" alt="" />
+  </button>
   <button v-else :type="props.type" :class="styling" @click="redirectTo">
     <h2>
       <slot></slot>

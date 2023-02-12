@@ -1,5 +1,5 @@
 <template>
-  <div class="input-container">
+  <div class="input-container" :class="validation">
     <h2>{{ props.title }}</h2>
     <div>
       <label for="file">ატვირთვა</label>
@@ -9,9 +9,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-const props = defineProps(['title', 'modelValue']);
+import { ref, computed } from 'vue';
+const props = defineProps(['title', 'modelValue', 'validation']);
 const emit = defineEmits(['update:modelValue', 'fileInput']);
+
+const validation = computed(() => {
+  return { passed: props.validation === 'passed', failed: props.validation === 'failed' };
+});
 
 function updateInput(e) {
   const fr = new FileReader();
@@ -54,6 +58,19 @@ function updateInput(e) {
     }
     &:active {
       background: hsla(202, 86%, 30%, 1);
+    }
+  }
+
+  &.failed {
+    label {
+      background: hsla(0, 83%, 63%, 1);
+
+      &:hover {
+        background: rgb(240, 60, 60);
+      }
+      &:active {
+        background: rgb(240, 49, 49);
+      }
     }
   }
 }
