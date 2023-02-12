@@ -1,92 +1,95 @@
 <template>
   <div class="resume">
-    <div class="private">
-      <div class="private-details">
-        <div class="private-info">
-          <h2>{{ fullName }}</h2>
-          <div class="marked-details">
-            <div class="marked-detail">
-              <img v-if="mail" src="../../assets/svg/at.svg" alt="" />
-              <p class="large">{{ mail }}</p>
-            </div>
-            <div class="marked-detail">
-              <img v-if="mNumber" src="../../assets/svg/phone.svg" alt="" />
-              <p class="large">{{ mNumber }}</p>
+    <div>
+      <div class="private">
+        <div class="private-details">
+          <div class="private-info">
+            <h2>{{ fullName }}</h2>
+            <div class="marked-details">
+              <div class="marked-detail">
+                <img v-if="mail" src="../../assets/svg/at.svg" alt="" />
+                <p class="large">{{ mail }}</p>
+              </div>
+              <div class="marked-detail">
+                <img v-if="mNumber" src="../../assets/svg/phone.svg" alt="" />
+                <p class="large">{{ mNumber }}</p>
+              </div>
             </div>
           </div>
+          <div class="description">
+            <h3 v-if="description">ჩემ შესახებ</h3>
+            <p>{{ description }}</p>
+          </div>
         </div>
-        <div class="description">
-          <h3 v-if="description">ჩემ შესახებ</h3>
-          <p>{{ description }}</p>
+        <img v-if="img" id="profile-img" :src="img" alt="" />
+      </div>
+      <div v-if="experiences" class="separator"></div>
+      <div v-if="experiences" class="experiences">
+        <h3 class="title">გამოცდილება</h3>
+        <div v-for="experience in experiences" :key="experience.id" class="experience">
+          <div class="duo-holder">
+            <div class="duo">
+              <h4>{{ experience.position.value }}</h4>
+              <h4
+                class="coma"
+                v-if="experience.position.value && experience.employer.value"
+              >
+                ,
+              </h4>
+              <h4>{{ experience.employer.value }}</h4>
+            </div>
+            <div class="duo">
+              <h4 class="faded">{{ experience.start_date.value }}</h4>
+              <h4
+                v-if="experience.start_date.value && experience.due_date.value"
+                class="faded dash"
+              >
+                -
+              </h4>
+              <h4 class="faded">{{ experience.due_date.value }}</h4>
+            </div>
+          </div>
+          <p>{{ experience.description.value }}</p>
+          <div
+            v-if="
+              experience.position.value ||
+              experience.employer.value ||
+              experience.start_date.value ||
+              experience.due_date.value ||
+              experience.description.value
+            "
+            class="separator"
+          ></div>
         </div>
       </div>
-      <img v-if="img" id="profile-img" :src="img" alt="" />
-    </div>
-    <div v-if="experiences" class="separator"></div>
-    <div v-if="experiences" class="experiences">
-      <h3 class="title">გამოცდილება</h3>
-      <div v-for="experience in experiences" :key="experience.id" class="experience">
-        <div class="duo-holder">
+      <div v-if="educations" class="experiences">
+        <h3 class="title">განათლება</h3>
+        <div v-for="education in educations" :key="education.id" class="experience">
           <div class="duo">
-            <h4>{{ experience.position.value }}</h4>
+            <h4>{{ education.institute.value }}</h4>
             <h4
               class="coma"
-              v-if="experience.position.value && experience.employer.value"
+              v-if="education.institute.value && education.degree.value?.title"
             >
               ,
             </h4>
-            <h4>{{ experience.employer.value }}</h4>
+            <h4>{{ education.degree.value?.title || null }}</h4>
           </div>
-          <div class="duo">
-            <h4 class="faded">{{ experience.start_date.value }}</h4>
-            <h4
-              v-if="experience.start_date.value && experience.due_date.value"
-              class="faded dash"
-            >
-              -
-            </h4>
-            <h4 class="faded">{{ experience.due_date.value }}</h4>
-          </div>
+          <h4 class="faded">{{ education.due_date.value }}</h4>
+          <p>{{ education.description.value }}</p>
+          <div
+            v-if="
+              education.institute.value ||
+              education.degree.value?.title ||
+              education.due_date.value ||
+              education.description.value
+            "
+            class="separator"
+          ></div>
         </div>
-        <p>{{ experience.description.value }}</p>
-        <div
-          v-if="
-            experience.position.value ||
-            experience.employer.value ||
-            experience.start_date.value ||
-            experience.due_date.value ||
-            experience.description.value
-          "
-          class="separator"
-        ></div>
       </div>
     </div>
-    <div v-if="educations" class="experiences">
-      <h3 class="title">განათლება</h3>
-      <div v-for="education in educations" :key="education.id" class="experience">
-        <div class="duo">
-          <h4>{{ education.institute.value }}</h4>
-          <h4
-            class="coma"
-            v-if="education.institute.value && education.degree.value?.title"
-          >
-            ,
-          </h4>
-          <h4>{{ education.degree.value?.title || null }}</h4>
-        </div>
-        <h4 class="faded">{{ education.due_date.value }}</h4>
-        <p>{{ education.description.value }}</p>
-        <div
-          v-if="
-            education.institute.value ||
-            education.degree.value?.title ||
-            education.due_date.value ||
-            education.description.value
-          "
-          class="separator"
-        ></div>
-      </div>
-    </div>
+    <img id="company-logo" src="../../assets/img/small-logo.png" alt="" />
   </div>
 </template>
 
@@ -142,8 +145,16 @@ const educations = computed(() => {
   object-fit: cover;
   border-radius: 50%;
 }
+#company-logo {
+  width: 45px;
+  height: 45px;
+}
 .resume {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   padding: 50px;
+  line-break: anywhere;
 }
 
 h2 {

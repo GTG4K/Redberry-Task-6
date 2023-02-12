@@ -1,6 +1,6 @@
 <template>
   <div class="input-container">
-    <h2>{{ props.title }}</h2>
+    <h2 :class="validation">{{ props.title }}</h2>
     <textarea
       @input="updateValue"
       :placeholder="props.placeholder"
@@ -31,22 +31,26 @@ function updateValue(e) {
   gap: 0.4rem;
   flex-direction: column;
 
-  .passed {
-    border: 1px solid hsla(105, 64%, 69%, 1);
-  }
-  .failed {
-    border: 1px solid hsla(0, 83%, 63%, 1);
-  }
   textarea {
     resize: none;
     height: 80px;
     border-radius: 4px;
     background: white;
     border: 1px solid #bcbcbc;
+
+    &.passed {
+      border: 1px solid hsla(105, 64%, 69%, 1);
+    }
+    &.failed {
+      border: 1px solid hsla(0, 83%, 63%, 1);
+    }
   }
   h2 {
     font-weight: 700;
     font-size: 16px;
+    &.failed {
+      color: hsla(0, 78%, 54%, 1);
+    }
   }
   span {
     font-weight: 300;

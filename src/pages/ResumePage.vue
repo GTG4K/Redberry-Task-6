@@ -16,8 +16,9 @@
         :educations="resumeEducations"
       ></resume-container>
     </div>
-    <div class="message">
+    <div class="message" v-if="dataUploaded">
       <h1>რეზიუმე წარმატებით გაიგზავნა 🎉</h1>
+      <img id="close-alert" @click="clearMessage" src="../assets/svg/x.svg" alt="" />
     </div>
   </div>
 </template>
@@ -41,6 +42,11 @@ const id = ref(0);
 const resumeExperiences = ref([]);
 const resumeEducations = ref([]);
 const resumeImage = ref('');
+
+const dataUploaded = ref(false);
+function clearMessage() {
+  dataUploaded.value = false;
+}
 
 //get Stored form data
 const sessionName = sessionStorage.getItem('name');
@@ -138,6 +144,7 @@ fetch(sessionImgUrl)
         });
 
         resumeImage.value = `https://resume.redberryinternship.ge${fetchedData.value.image}`;
+        dataUploaded.value = true;
       })
       .catch((error) => console.log(error));
   });
@@ -147,6 +154,11 @@ fetch(sessionImgUrl)
 * {
   font-family: 'HelveticaNeue';
 }
+
+#close-alert {
+  cursor: pointer;
+}
+
 .resume-page {
   display: grid;
   grid-template-columns: 450px 1fr 450px;

@@ -62,6 +62,10 @@ function updateInput(e) {
   }
 
   &.failed {
+    h2 {
+      color: hsla(0, 78%, 54%, 1);
+    }
+
     label {
       background: hsla(0, 83%, 63%, 1);
 

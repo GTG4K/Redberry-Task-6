@@ -9,10 +9,15 @@
 
   <!-- if loaded -->
   <div v-else class="select-container">
-    <h2>{{ props.title }}</h2>
+    <h2 :class="validation">{{ props.title }}</h2>
     <div class="select-body" :class="validation" @click="toggleSelect">
       <span>{{ selectedDegree?.title || 'აირჩიეთ ხარისხი' }}</span>
-      <img src="../../assets/svg/arrow-down.svg" alt="" />
+      <img
+        :class="selectStyling"
+        id="dropdown-svg"
+        src="../../assets/svg/arrow-down.svg"
+        alt=""
+      />
     </div>
     <div class="select-options" :class="selectStyling">
       <div
@@ -56,6 +61,12 @@ const selectStyling = computed(() => {
 </script>
 
 <style scoped lang="scss">
+#dropdown-svg {
+  transition: 0.2s ease-in-out;
+  &.selected {
+    transform: rotate(180deg);
+  }
+}
 .select-container {
   display: flex;
   gap: 0.4rem;
@@ -65,6 +76,9 @@ const selectStyling = computed(() => {
   h2 {
     font-weight: 700;
     font-size: 16px;
+    &.failed {
+      color: hsla(0, 78%, 54%, 1);
+    }
   }
 }
 
